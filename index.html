@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>520专属 | 徐宗雨</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #1a1a1a;
+            overflow: hidden;
+            font-family: 'Microsoft YaHei', sans-serif;
+            touch-action: manipulation;
+        }
+
+        .stars {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+        }
+
+        .heart {
+            position: relative;
+            width: 120px;
+            height: 108px;
+            animation: heartbeat 1.2s infinite;
+            cursor: pointer;
+        }
+
+        .heart::before,
+        .heart::after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 96px;
+            background: linear-gradient(45deg, #ff1493, #ff69b4);
+            border-radius: 60px 60px 0 0;
+            transform-origin: bottom right;
+        }
+
+        .heart::before {
+            left: 60px;
+            transform: rotate(-45deg);
+            transform-origin: 0 100%;
+        }
+
+        .heart::after {
+            left: 0;
+            transform: rotate(45deg);
+            transform-origin: 100% 100%;
+        }
+
+        .message {
+            margin-top: 2rem;
+            color: #fff;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .message h1 {
+            font-size: min(8vw, 2.5rem);
+            margin-bottom: 1rem;
+            text-shadow: 0 0 15px rgba(255, 105, 180, 0.8);
+            animation: textGlow 2s ease-in-out infinite;
+        }
+
+        .love-btn {
+            margin-top: 2rem;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #ff69b4, #ff1493);
+            border: none;
+            border-radius: 30px;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .time-counter {
+            margin-top: 1.5rem;
+            color: #ff69b4;
+            font-size: 1.2rem;
+            text-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+            animation: textGlow 2s ease-in-out infinite;
+        }
+
+        .counter-number {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #ff1493;
+        }
+
+        @keyframes heartbeat {
+
+            0%,
+            100% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 20px #ff3366);
+            }
+
+            50% {
+                transform: scale(1.1);
+                filter: drop-shadow(0 0 30px #ff1493);
+            }
+        }
+
+        @keyframes textGlow {
+
+            0%,
+            100% {
+                text-shadow: 0 0 15px rgba(255, 105, 180, 0.8);
+            }
+
+            50% {
+                text-shadow: 0 0 25px rgba(255, 20, 147, 0.9);
+            }
+        }
+
+        @keyframes petalFall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes particleFade {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(3);
+            }
+        }
+
+        @keyframes twinkle {
+
+            0%,
+            100% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .petal {
+            position: absolute;
+            font-size: 20px;
+            pointer-events: none;
+            animation-name: petalFall;
+            animation-timing-function: linear;
+            will-change: transform, opacity;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="stars"></div>
+    <div class="container">
+        <div class="heart"></div>
+        <div class="message">
+            <h1>亲爱的宝贝</h1>
+            <p>与你相遇的每一刻都如同星辰闪耀<br>愿这跳动的爱心能传达我永恒的爱意</p>
+            <div class="time-counter">
+                徐宗雨与孟凡熙已共同走过：<br>
+                <span class="counter-number" id="days">0</span> 天
+                <span class="counter-number" id="hours">0</span> 时
+                <span class="counter-number" id="minutes">0</span> 分
+                <span class="counter-number" id="seconds">0</span> 秒
+            </div>
+        </div>
+        <button class="love-btn">点击解锁惊喜 ❤️</button>
+    </div>
+
+    <script>
+        // 星空生成
+        function createStars() {
+            const container = document.querySelector('.stars');
+            for (let i = 0; i < 200; i++) {
+                const star = document.createElement('div');
+                star.style.cssText = `
+                    position: absolute;
+                    left: ${Math.random() * 100}%;
+                    top: ${Math.random() * 100}%;
+                    width: ${Math.random() * 3}px;
+                    height: ${Math.random() * 3}px;
+                    background: rgba(255,255,255,${Math.random()});
+                    border-radius: 50%;
+                    animation: twinkle ${2 + Math.random() * 3}s infinite;
+                `;
+                container.appendChild(star);
+            }
+        }
+
+        // 时间计数器
+        const startDate = new Date('2014-09-14T00:00:00');
+        function updateTimeCounter() {
+            const now = new Date();
+            const diff = now - startDate;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('days').textContent = days;
+            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+        }
+
+        // 花瓣雨
+        function createPetalRain() {
+            let count = 0;
+            const total = 50;
+
+            function spawn() {
+                if (count >= total) return;
+
+                const petal = document.createElement("div");
+                petal.className = "petal";
+                petal.innerText = "🌸";
+                petal.style.left = Math.random() * 100 + "vw";
+                petal.style.animationDuration = 4 + Math.random() * 3 + "s";
+                petal.style.fontSize = 16 + Math.random() * 16 + "px";
+                petal.style.top = "-30px";
+                document.body.appendChild(petal);
+
+                setTimeout(() => petal.remove(), 8000);
+
+                count++;
+                requestAnimationFrame(spawn); // 节奏更平滑
+            }
+
+            spawn();
+        }
+        // 按钮点击触发花瓣雨
+        document.querySelector('.love-btn').addEventListener('click', function () {
+            this.textContent = ['永远爱你', '你是唯一', '心心相印'][Math.floor(Math.random() * 3)];
+            this.style.transform = 'scale(1.1)';
+            setTimeout(() => this.style.transform = 'scale(1)', 200);
+            createPetalRain();
+        });
+
+        // 初始化
+        window.onload = () => {
+            createStars();
+            setInterval(updateTimeCounter, 1000);
+            updateTimeCounter();
+
+            document.addEventListener('pointermove', e => {
+                const particle = document.createElement('div');
+                particle.style.cssText = `
+                    position: absolute;
+                    left: ${e.clientX}px;
+                    top: ${e.clientY}px;
+                    width: 8px;
+                    height: 8px;
+                    background: ${e.pointerType === 'touch' ? '#fff' : '#ff69b4'};
+                    border-radius: 50%;
+                    animation: particleFade 1.5s;
+                `;
+                document.body.appendChild(particle);
+                setTimeout(() => particle.remove(), 1500);
+            });
+        };
+    </script>
+</body>
+
+</html>
